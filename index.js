@@ -33,7 +33,35 @@ function drawScreen()
 
 // Function to handle animation logic
 function handleLogic(){
+
+    // Horizontal movement with inner bounds check
+    if (ArrowLeft) {
+        if (actorX > 0) {
+            actorX -= actorSpeed;
+        }
+    }
+    if (ArrowRight) {
+        if (actorX + actorWidth < canvas.width) {
+            actorX += actorSpeed;
+        }
+    }
+
+    // Vertical movement with inner bounds check
+    if (ArrowUp) {
+        if (actorY > 0) {
+            actorY -= actorSpeed;
+        }
+    }
+    if (ArrowDown) {
+        if (actorY + actorHeight < canvas.height) {
+            actorY += actorSpeed;
+        }
+    }
+
+
+
     
+
 }
 
 
