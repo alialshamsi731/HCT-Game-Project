@@ -11,7 +11,7 @@ function drawUI(){
     ctx.beginPath();
     ctx.font = "16pt monospace"; 
     ctx.strokeStyle = "lightgreen";
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 5;
     ctx.strokeRect(10,canvas.height-110, canvas.width-20,100);
     
 
@@ -37,13 +37,8 @@ function drawLevelOne()
     ctx.fillText("Timer : " +gameTimer,canvas.width/2,20);
     ctx.fillText("Level : 01",canvas.width-100,20);
     
-    // Left & Right and Top wall
-    drawLine(10,25,canvas.width-10,25,"lightgreen");
-    drawLine(10,25,10,470,"lightgreen");
-    drawLine(canvas.width-10,25,canvas.width-10,470,"lightgreen");
-
-    drawLine(10,470,canvas.width-10,470,"lightgreen");
-    
+    // Left & Right & Top and Bottom wall
+    drawRectangleOutline(10,25,canvas.width-20,canvas.height-155,"lightgreen");
 
 }
 
@@ -57,10 +52,9 @@ function drawLevelTwo()
     ctx.fillText("Timer : " +gameTimer,canvas.width/2,20);
     ctx.fillText("Level : 02",canvas.width-100,20);
     
-    // Left & Right and Top wall
-    drawLine(10,25,canvas.width-10,25,"lightgreen");
-    drawLine(10,25,10,470,"lightgreen");
-    drawLine(canvas.width-10,25,canvas.width-10,470,"lightgreen");
+    // Left & Right & Top and Bottom wall
+    drawRectangleOutline(10,25,canvas.width-20,canvas.height-155,"lightgreen");
+    
 
 }
 
@@ -74,11 +68,13 @@ function drawLevelThree()
     ctx.fillText("Timer : " +gameTimer,canvas.width/2,20);
     ctx.fillText("Level : 03",canvas.width-100,20);
     
-    // Left & Right and Top wall
-    drawLine(10,25,canvas.width-10,25,"lightgreen");
-    drawLine(10,25,10,470,"lightgreen");
-    drawLine(canvas.width-10,25,canvas.width-10,470,"lightgreen");
+    // Left & Right & Top and Bottom wall
+    drawRectangleOutline(10,25,canvas.width-20,canvas.height-155,"lightgreen");
 }
+
+
+
+
 
 
 
@@ -89,4 +85,21 @@ function drawLine(x1,y1,x2,y2,color)
     ctx.moveTo(x1,y1);
     ctx.lineTo(x2,y2);
     ctx.stroke();
+}
+function drawRectangle(x,y,width,height,color)
+{
+    ctx.fillStyle = color;
+    ctx.fillRect(x,y,width,height);
+}
+function drawRectangleOutline(x,y,width,height,color)
+{
+    ctx.strokeStyle = color;
+    ctx.strokeRect(x,y,width,height);
+}
+function drawCircle(x,y,radius,color)
+{
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x,y,radius,0,2*Math.PI);
+    ctx.fill();
 }

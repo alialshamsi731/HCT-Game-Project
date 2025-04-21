@@ -15,7 +15,7 @@ var actorSpeed = 6; // Speed of the actor
 
 // Attributes of an background
 var background = new Image();
-background.src = "images/bk.png";
+background.src = "images/bk1.png";
 var backgroundHeight = canvas.height;
 var backgroundWidth = canvas.width;
 var backgroundX = 0;
@@ -36,7 +36,7 @@ function drawScreen()
     drawUI();
 
     // call to draw the background
-    //ctx.drawImage(background,backgroundX,backgroundY,backgroundWidth,backgroundHeight);
+    // ctx.drawImage(background,backgroundX,backgroundY,backgroundWidth,backgroundHeight);
     // Call to draw the actor
     ctx.drawImage(actor,actorX,actorY,actorWidth,actorHeight);
 
