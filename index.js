@@ -6,26 +6,42 @@ var ctx = canvas.getContext("2d");
 
 // Attributes of an Actor 
 var actor = new Image();
-actor.src = "images/actor.jpg";
+actor.src = "images/actor1.jpg";
 var actorHeight = 50;
 var actorWidth = 50;
-var actorX = 0;
-var actorY = 0;
-var actorSpeed = 5;
+var actorX = 50;
+var actorY = 420;
+var actorSpeed = 6; // Speed of the actor
 
+// Attributes of an background
+var background = new Image();
+background.src = "images/bk.png";
+var backgroundHeight = canvas.height;
+var backgroundWidth = canvas.width;
+var backgroundX = 0;
+var backgroundY = 0;
 
+var gameLevel = 1; // Game level 
+var gameTimer = 10; // Game time in seconds
 
 
 
 // Function to draw screen
 function drawScreen()
 {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    
+    ctx.clearRect(0,0,canvas.width,canvas.height);  
 
+    drawBackground();
+    drawUI();
+
+    // call to draw the background
+    //ctx.drawImage(background,backgroundX,backgroundY,backgroundWidth,backgroundHeight);
     // Call to draw the actor
     ctx.drawImage(actor,actorX,actorY,actorWidth,actorHeight);
 
 }
+
 
 
 
@@ -36,32 +52,37 @@ function handleLogic(){
 
     // Horizontal movement with inner bounds check
     if (ArrowLeft) {
-        if (actorX > 0) {
+        if (actorX > 10) {
             actorX -= actorSpeed;
         }
     }
     if (ArrowRight) {
-        if (actorX + actorWidth < canvas.width) {
+        if (actorX + actorWidth < canvas.width - 10) {
             actorX += actorSpeed;
         }
     }
 
     // Vertical movement with inner bounds check
     if (ArrowUp) {
-        if (actorY > 0) {
-            actorY -= actorSpeed;
-        }
     }
-    if (ArrowDown) {
-        if (actorY + actorHeight < canvas.height) {
-            actorY += actorSpeed;
-        }
+    if (ArrowDown) {  
     }
 
+ 
 
-
-    
-
+    // Check for level change
+    if (gameLevel == 1)
+    {   
+        drawLevelOne();
+    }
+    else if (gameLevel == 2)
+    {
+        drawLevelTwo();
+    }
+    else if (gameLevel == 3)
+    {
+        drawLevelThree();
+    }
 }
 
 
@@ -151,6 +172,8 @@ function animate()
 
         // Move the  cirle to the Right
         handleLogic();
+
+        
 
     }, delay)
 }
