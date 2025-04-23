@@ -6,23 +6,33 @@ var ctx = canvas.getContext("2d");
 
 // Attributes of an Actor 
 var actor = new Image();
-actor.src = "images/actor1.jpg";
-var actorHeight = 50;
-var actorWidth = 50;
+actor.src = "images/image.png";
+var actorHeight = 27;
+var actorWidth = 25;
 var actorX = 50;
-var actorY = 420;
-var actorSpeed = 6; // Speed of the actor
+var actorY = 393;
+var actorSpeed = 5; // Speed of the actor
 
 // Attributes of an background
 var background = new Image();
-background.src = "images/bk1.png";
+background.src = "images/Level 1.png";
 var backgroundHeight = canvas.height;
 var backgroundWidth = canvas.width;
 var backgroundX = 0;
 var backgroundY = 0;
 
-var gameLevel = 1; // Game level 
-var gameTimer = 10; // Game time in seconds
+// Attributes of an goal
+var goal = new Image();
+goal.src = "images/goal.png";
+var goalHeight = 50;
+var goalWidth = 50;
+var goalX = 700;
+var goalY = 120;
+
+// game static variables
+
+var gameLevel = 1; // Game level (0: Main Menu, 1: Level 1, 2: Level 2, 3: Level 3)
+var gameTimer = 0; // Game time in seconds
 
 
 
@@ -31,15 +41,18 @@ function drawScreen()
 {
     
     ctx.clearRect(0,0,canvas.width,canvas.height);  
-
-    drawBackground();
-    drawUI();
+    
 
     // call to draw the background
-    // ctx.drawImage(background,backgroundX,backgroundY,backgroundWidth,backgroundHeight);
+    ctx.drawImage(background,backgroundX,backgroundY,backgroundWidth,backgroundHeight);
+
+    if (!gameLevel == 0){
     // Call to draw the actor
     ctx.drawImage(actor,actorX,actorY,actorWidth,actorHeight);
-
+    // Call to draw the goal
+    ctx.drawImage(goal,goalX,goalY,goalWidth,goalHeight);
+    }
+    
 }
 
 
@@ -52,37 +65,48 @@ function handleLogic(){
 
     // Horizontal movement with inner bounds check
     if (ArrowLeft) {
-        if (actorX > 10) {
+        if (actorX > 20) {
             actorX -= actorSpeed;
         }
     }
     if (ArrowRight) {
-        if (actorX + actorWidth < canvas.width - 10) {
+        if (actorX + actorWidth < canvas.width - 20) {
             actorX += actorSpeed;
         }
     }
 
-    // Vertical movement with inner bounds check
-    if (ArrowUp) {
+
+    if (PressSpase) {
+        if (gameLevel == 0) {
+            gameLevel = 1;
+            
+        }
     }
-    if (ArrowDown) {  
-    }
+
 
  
 
-    // Check for level change
+
+    if (gameLevel == 0)
+    {
+        drawMainUI();
+    }
     if (gameLevel == 1)
     {   
         drawLevelOne();
+        
     }
-    else if (gameLevel == 2)
+    if (gameLevel == 2)
     {
         drawLevelTwo();
     }
-    else if (gameLevel == 3)
+    if (gameLevel == 3)
     {
         drawLevelThree();
     }
+    
+
+    
 }
 
 
@@ -98,6 +122,7 @@ var ArrowLeft = false;
 var ArrowRight = false;
 var ArrowUp = false;
 var ArrowDown = false;
+var PressSpase = false;
 
 function handleKeyUp(e)
 {
@@ -118,6 +143,10 @@ function handleKeyUp(e)
     else if (code == 40)
     {
         ArrowDown = false;
+    }
+    else if (code == 32)
+    {
+        PressSpase = false;
     }
 }
 
@@ -140,6 +169,10 @@ function handleKeyDown(e)
     else if (code == 40)
     {
         ArrowDown = true;
+    }
+    else if (code == 32)
+    {
+        PressSpase = true;
     }
 }
 

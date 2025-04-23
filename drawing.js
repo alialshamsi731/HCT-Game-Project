@@ -6,22 +6,13 @@ function drawBackground() {
 
 
 // Function to draw the UI
-function drawUI(){
-    
-    ctx.beginPath();
-    ctx.font = "16pt monospace"; 
-    ctx.strokeStyle = "lightgreen";
-    ctx.lineWidth = 5;
-    ctx.strokeRect(10,canvas.height-110, canvas.width-20,100);
-    
+function drawMainUI(){
 
+    background.src = "images/MainMenu.png";
     ctx.beginPath();
-    ctx.font = "13pt Arial";
-    ctx.fillStyle  = "white";   
-    ctx.fillText("Move   :   Left / Right Arrows",20,canvas.height-90);
-    ctx.fillText("Action  :  Up Arrow",20,canvas.height-55);
-    ctx.fillText("Reset  :   Press (R) Key ",20,canvas.height-20);
-
+    ctx.font = "24pt Trattatello";
+    ctx.fillStyle = "Black";
+    ctx.fillText("Press (Enter) to Start",canvas.width/2-125,canvas.height-150);
     
 }
 
@@ -30,46 +21,68 @@ function drawUI(){
 // Function to draw the game level 1
 function drawLevelOne()
 {
+    // Draw the background
+    background.src = "images/Level 1.png";
     // write the level information UI
     ctx.beginPath();
-    ctx.font = "13pt Arial";
-    ctx.fillText("<-- Actions",100,20);
-    ctx.fillText("Timer : " +gameTimer,canvas.width/2,20);
-    ctx.fillText("Level : 01",canvas.width-100,20);
+    ctx.font = "15pt Trattatello";
+    ctx.fillStyle = "Black";
+    ctx.fillText("<-- Actions",130,25);
+    ctx.fillText("Timer : " +gameTimer,canvas.width/2,25);
+    ctx.fillText("Level : 01",canvas.width-100,25);
     
-    // Left & Right & Top and Bottom wall
-    drawRectangleOutline(10,25,canvas.width-20,canvas.height-155,"lightgreen");
+    ctx.fillText("Move   :   Left / Right Arrows",25,canvas.height-120);
+    ctx.fillText("Action  :  Up Arrow",25,canvas.height-90);
+    ctx.fillText("Reset  :   Press (R) Key ",25,canvas.height-60);
+    ctx.fillText("Exit  :   Press (Esc) Key ",25,canvas.height-30);
+
+    
+
 
 }
+
+
+
 
 // Function to draw the game level 2
 function drawLevelTwo()
 {
     // write the level information UI
     ctx.beginPath();
-    ctx.font = "13pt Arial";
-    ctx.fillText("<-- Actions",100,20);
-    ctx.fillText("Timer : " +gameTimer,canvas.width/2,20);
-    ctx.fillText("Level : 02",canvas.width-100,20);
+    ctx.font = "15pt Trattatello";
+    ctx.fillStyle = "Black";
+    ctx.fillText("<-- Actions",130,25);
+    ctx.fillText("Timer : " +gameTimer,canvas.width/2,25);
+    ctx.fillText("Level : 02",canvas.width-100,25);
     
-    // Left & Right & Top and Bottom wall
-    drawRectangleOutline(10,25,canvas.width-20,canvas.height-155,"lightgreen");
-    
+    ctx.fillText("Move   :   Left / Right Arrows",25,canvas.height-120);
+    ctx.fillText("Action  :  Up Arrow",25,canvas.height-90);
+    ctx.fillText("Reset  :   Press (R) Key ",25,canvas.height-60);
+    ctx.fillText("Exit  :   Press (Esc) Key ",25,canvas.height-30);
 
 }
+
+
+
+
+
 
 // Function to draw the game level 3
 function drawLevelThree()
 {
     // write the level information UI
     ctx.beginPath();
-    ctx.font = "13pt Arial";
-    ctx.fillText("<-- Actions",100,20);
-    ctx.fillText("Timer : " +gameTimer,canvas.width/2,20);
-    ctx.fillText("Level : 03",canvas.width-100,20);
+    ctx.font = "15pt Trattatello";
+    ctx.fillStyle = "Black";
+    ctx.fillText("<-- Actions",130,25);
+    ctx.fillText("Timer : " +gameTimer,canvas.width/2,25);
+    ctx.fillText("Level : 03",canvas.width-100,25);
     
-    // Left & Right & Top and Bottom wall
-    drawRectangleOutline(10,25,canvas.width-20,canvas.height-155,"lightgreen");
+    ctx.fillText("Move   :   Left / Right Arrows",25,canvas.height-120);
+    ctx.fillText("Action  :  Up Arrow",25,canvas.height-90);
+    ctx.fillText("Reset  :   Press (R) Key ",25,canvas.height-60);
+    ctx.fillText("Exit  :   Press (Esc) Key ",25,canvas.height-30);
+    
 }
 
 
