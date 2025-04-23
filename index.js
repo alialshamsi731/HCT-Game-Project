@@ -146,8 +146,18 @@ function handleKeyUp(e)
     }
     else if (code == 32)
     {
-        PressSpase = false;
+        if (gameLevel == 0) {
+            gameLevel = 1;
+            
+        }
     }
+    else if (code == 27)
+        {
+            if (!gameLevel == 0) {
+                gameLevel = 0;
+                
+            }
+        }
 }
 
 function handleKeyDown(e)
@@ -170,10 +180,7 @@ function handleKeyDown(e)
     {
         ArrowDown = true;
     }
-    else if (code == 32)
-    {
-        PressSpase = true;
-    }
+    
 }
 
 
