@@ -22,7 +22,7 @@ function drawMainUI(){
 function drawLevelOne()
 {
     // Draw the background
-    background.src = "images/Level 1.png";
+    background.src = "images/Level1.png";
     // write the level information UI
     ctx.beginPath();
     ctx.font = "15pt Trattatello";
@@ -47,6 +47,8 @@ function drawLevelOne()
 // Function to draw the game level 2
 function drawLevelTwo()
 {
+    // Draw the background
+    background.src = "images/Level2.png";
     // write the level information UI
     ctx.beginPath();
     ctx.font = "15pt Trattatello";
@@ -70,6 +72,8 @@ function drawLevelTwo()
 // Function to draw the game level 3
 function drawLevelThree()
 {
+    // Draw the background
+    background.src = "images/Level3.png";
     // write the level information UI
     ctx.beginPath();
     ctx.font = "15pt Trattatello";

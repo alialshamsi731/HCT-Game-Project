@@ -12,10 +12,22 @@ var actorWidth = 25;
 var actorX = 50;
 var actorY = 393;
 var actorSpeed = 5; // Speed of the actor
+// Add gravity and jump variables
+var gravity = 0.5; // Gravity force
+var jumpStrength = -10; // Jump force
+var velocityY = 0; // Vertical velocity
+var isJumping = false; // To prevent double jumps
+// Define spawn points for each level
+var spawnPoints = {
+    1: { x: 50, y: 393 }, // Level 1 spawn point
+    2: { x: 100, y: 393 }, // Level 2 spawn point
+    3: { x: 700, y: 265 }  // Level 3 spawn point
+};
+
 
 // Attributes of an background
 var background = new Image();
-background.src = "images/Level 1.png";
+background.src = "images/Level1.png";
 var backgroundHeight = canvas.height;
 var backgroundWidth = canvas.width;
 var backgroundX = 0;
@@ -76,10 +88,30 @@ function handleLogic(){
     }
 
 
+    //jump and gravity logic
+    if (ArrowUp && !isJumping) {
+        isJumping = true;
+        velocityY = jumpStrength;
+    }
+    if (isJumping) {
+        actorY += velocityY;
+        velocityY += gravity;
+
+        // Check if the actor is on the ground
+        if (actorY + actorHeight >= canvas.height - 180) {
+            actorY = canvas.height - 180 - actorHeight;
+            isJumping = false;
+            velocityY = 0;
+        }
+    }
+
+
+
+
     if (PressSpase) {
         if (gameLevel == 0) {
             gameLevel = 1;
-            
+            spawnActor(gameLevel); // Spawn actor for level 1
         }
     }
 
@@ -94,20 +126,60 @@ function handleLogic(){
     if (gameLevel == 1)
     {   
         drawLevelOne();
+        goalX = 700;
+        goalY = 120;
         
+        // Check if the actor is inside the goal
+        checkActorInsideGoal();
+
     }
     if (gameLevel == 2)
     {
         drawLevelTwo();
+        goalX = 100;
+        goalY = 110;
+       
+
+        // Check if the actor is inside the goal
+        checkActorInsideGoal();
+        
     }
     if (gameLevel == 3)
     {
         drawLevelThree();
+        goalX = 100;
+        goalY = 240;
+        
+        // Check if the actor is inside the goal
+        checkActorInsideGoal();
+
     }
     
 
-    
+
+
+
+
+
+
+// Function to check if the actor is inside the goal
+function checkActorInsideGoal() {
+    if (actorX < goalX + goalWidth && actorX + actorWidth > goalX &&
+        actorY < goalY + goalHeight &&
+        actorY + actorHeight > goalY
+    ) {
+        alert("You reached the goal!");
+        gameLevel += 1;
+        
+        ArrowLeft = false;
+        ArrowRight = false;
+        
+    }
 }
+}
+
+
+
 
 
 
@@ -159,6 +231,9 @@ function handleKeyUp(e)
             }
         }
 }
+
+
+
 
 function handleKeyDown(e)
 {
