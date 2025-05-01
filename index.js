@@ -37,26 +37,7 @@ var spawnPoints = {
 };
 
 
-var levelObstacles = {
-    1: [
-        { x: 220, y: 340, width: 90, height: 90 },
-        { x: 310, y: 410, width: 90, height: 20 },
-        { x: 400, y: 260, width: 130, height: 170 },
-        { x: 530, y: 410, width: 90, height: 20 },
-        { x: 620, y: 170, width: 160, height: 260 }
-    ],
-    2: [
-        { x: 150, y: 300, width: 100, height: 50 },
-        { x: 300, y: 350, width: 120, height: 30 },
-        { x: 500, y: 200, width: 150, height: 100 }
-    ],
-    3: [
-        { x: 100, y: 400, width: 80, height: 80 },
-        { x: 250, y: 350, width: 100, height: 50 },
-        { x: 400, y: 300, width: 120, height: 60 },
-        { x: 600, y: 250, width: 140, height: 70 }
-    ]
-};
+
 
 
 // Attributes of an goal
@@ -68,44 +49,36 @@ var goalX = 700;
 var goalY = 120;
 
 
+// darw the Left Arrow Button 
+var leftcontrol = new Image();
+leftcontrol.src = "images/LeftArrowBatton.png";
+var leftcontrolHeight = 100;
+var leftcontrolWidth = 100;
+var leftcontrolX = 470;
+var leftcontrolY = 470;
 
+// draw the Right Arrow Button 
+var rightcontrol = new Image();
+rightcontrol.src = "images/RightArrowButton.png";
+var rightcontrolHeight = 100;
+var rightcontrolWidth = 100;
+var rightcontrolX = 670;
+var rightcontrolY = 470;
 
+// draw the Up Question Mark Button 
+var upcontrol = new Image();
+upcontrol.src = "images/QuestionMarkButton.png";
+var upcontrolHeight = 100;
+var upcontrolWidth = 100;
+var upcontrolX = 570;
+var upcontrolY = 470;
 
-
-// Attributes of an Left Arrow Button
-var leftArrow = new Image();
-leftArrow.src = "images/LeftArrowBatton.png";
-var leftArrowHeight = 100;
-var leftArrowWidth = 100;
-var leftArrowX = 200;
-var leftArrowY = 200;
-
-// Attributes of an Right Arrow Button
-var rightArrow = new Image();
-rightArrow.src = "images/RightArrowButton.png";
-var rightArrowHeight = 100;
-var rightArrowWidth = 100;
-var rightArrowX = 300;
-var rightArrowY = 300;
-
-// Attributes of an Up Arrow Button
-var upArrow = new Image();
-upArrow.src = "images/UpArrowButton.png";
-var upArrowHeight = 100;
-var upArrowWidth = 100;
-var upArrowX = 400;
-var upArrowY = 400;
-
-// Attributes of an Reload Arrow Button
-var reloadArrow = new Image();
-reloadArrow.src = "images/ReloadButton.png";
-var reloadArrowHeight = 100;
-var reloadArrowWidth = 100;
-var reloadArrowX = 500;
-var reloadArrowY = 500;
-
-
-
+var ui = new Image();
+    ui.src = "images/ui.png";
+    var uiX = 20;
+    var uiY = 460;
+    var uiWidth = 240;
+    var uiHeight = 120;
 
 
 
@@ -126,21 +99,8 @@ function drawScreen()
     // call to draw the background
     ctx.drawImage(background,backgroundX,backgroundY,backgroundWidth,backgroundHeight);
 
-    if (gameLevel == 0){
-        background.src = "images/MainMenu.png";
-        
-    }
-    else if (gameLevel == 1){
-        background.src = "images/Level1.png"
-        drawLevelOne();
-    }
-    else if (gameLevel == 2){
-        background.src = "images/Level2.png"
-        drawLevelTwo();
-    }
-    else if (gameLevel == 3){
-        background.src = "images/Level3.png"
-        drawLevelThree();
+    if (gameLevel === 0 ||gameLevel === 1 || gameLevel === 2 || gameLevel === 3) {
+        background.src = `images/Level${gameLevel}.png`;
     }
     
 
@@ -150,17 +110,12 @@ function drawScreen()
         // Call to draw the goal
         ctx.drawImage(goal,goalX,goalY,goalWidth,goalHeight);
 
-
+        // Call to draw the control arrow
+        ctx.drawImage(leftcontrol,leftcontrolX,leftcontrolY,leftcontrolWidth,leftcontrolHeight);
+        ctx.drawImage(rightcontrol,rightcontrolX,rightcontrolY,rightcontrolWidth,rightcontrolHeight);
+        ctx.drawImage(upcontrol,upcontrolX,upcontrolY,upcontrolWidth,upcontrolHeight);
+        ctx.drawImage(ui,uiX,uiY,uiWidth,uiHeight);
     }
-    
-
-    
-    // ctx.drawImage(leftArrow, leftArrowX, leftArrowY, leftArrowWidth, leftArrowHeight);    
-    // ctx.drawImage(rightArrow,rightArrowX,rightArrowY,rightArrowWidth,rightArrowHeight);
-    // ctx.drawImage(upArrow,upArrowX,upArrowY,upArrowWidth,upArrowHeight);
-    // ctx.drawImage(reloadArrow,reloadArrowX,reloadArrowY,reloadArrowWidth,reloadArrowHeight);
-
-   
 }
 
 
@@ -215,7 +170,9 @@ function handleLogic(){
             velocityY = 0;
         }
     }
-
+    
+    // Check line collisions and failure
+checkLevelLineInteractions();
 
 
 
@@ -232,6 +189,8 @@ function handleLogic(){
         
         // Check if the actor is inside the goal
         checkActorInsideGoal();
+
+        
 
     }
     if (gameLevel == 2)
@@ -302,10 +261,12 @@ function handleLogic(){
         }
     }
 
+ 
+    
+
 
 
     
-
 } // end of handleLogic
 
 
@@ -348,8 +309,7 @@ function handleKeyUp(e)
     }
     if (code == 32) { // Space key
         if (gameLevel == 0) {
-            gameLevel = 1;
-            spawnActor(gameLevel); // Spawn actor for level 1
+            resettingtGame(); // Call the reset function
         }
     }
     else if (code == 27) { // Escape key
@@ -357,6 +317,9 @@ function handleKeyUp(e)
             gameLevel = 0;
             spawnActor(gameLevel); // Reset actor position for main menu if needed
         }
+    }
+    else if (code == 82) { // R key
+        resetGame(); // Call the reset function
     }
 }
 
@@ -390,9 +353,61 @@ function handleKeyDown(e)
 
 
 
+function resettingtGame() {
+    console.log("Resetting game...");
+
+    // Reset to level 1
+    gameLevel = 1;
+
+    // Reset actor position and velocity
+    actorX = spawnPoints[gameLevel].x;
+    actorY = spawnPoints[gameLevel].y;
+    velocityY = 0;
+    isJumping = false;
+
+    // Reset input states
+    ArrowLeft = false;
+    ArrowRight = false;
+    ArrowUp = false;
+    ArrowDown = false;
+    PressSpase = false;
+
+    // Reset any game timers or progress
+    gameTimer = 0;
+
+    // Force background image to update
+    background.src = "images/Level1.png";
+
+    console.log("Game has been reset.");
+}
 
 
 
+function resetGame() {
+    console.log("Resetting current level...");
+
+    // Keep the current level
+    // Just reset actor and game state
+    actorX = spawnPoints[gameLevel].x;
+    actorY = spawnPoints[gameLevel].y;
+    velocityY = 0;
+    isJumping = false;
+
+    // Reset input states
+    ArrowLeft = false;
+    ArrowRight = false;
+    ArrowUp = false;
+    ArrowDown = false;
+    PressSpase = false;
+
+    // Reset timer or level-specific state
+    gameTimer = 0;
+
+    // Refresh background if needed
+    background.src = `images/Level${gameLevel}.png`;
+
+    console.log("Level reset complete.");
+}
 
 
 
