@@ -4,25 +4,115 @@ var ctx = canvas.getContext("2d");
 
 
 
-// Attributes of an Actor 
-var actor = new Image();
-actor.src = "images/actor1.jpg";
-var actorHeight = 50;
-var actorWidth = 50;
-var actorX = 50;
-var actorY = 420;
-var actorSpeed = 6; // Speed of the actor
-
 // Attributes of an background
 var background = new Image();
-background.src = "images/bk1.png";
 var backgroundHeight = canvas.height;
 var backgroundWidth = canvas.width;
 var backgroundX = 0;
 var backgroundY = 0;
 
-var gameLevel = 1; // Game level 
-var gameTimer = 10; // Game time in seconds
+
+
+
+
+// Attributes of an Actor 
+var actor = new Image();
+actor.src = "images/image.png";
+var actorHeight = 27;
+var actorWidth = 25;
+var actorX = 50;
+var actorY = 393;
+var actorSpeed = 5; 
+// Add gravity and jump variables
+var gravity = 0.5; // Gravity force
+var jumpStrength = -10; // Jump force
+var velocityY = 0; // Vertical velocity
+var isJumping = false; // To prevent double jumps
+// Define spawn points for each level
+var spawnPoints = {
+    0: { x: 50, y: 393 }, // Level 0 spawn point
+    1: { x: 50, y: 393 }, // Level 1 spawn point
+    2: { x: 100, y: 393 }, // Level 2 spawn point
+    3: { x: 700, y: 265 }  // Level 3 spawn point
+};
+
+
+var levelObstacles = {
+    1: [
+        { x: 220, y: 340, width: 90, height: 90 },
+        { x: 310, y: 410, width: 90, height: 20 },
+        { x: 400, y: 260, width: 130, height: 170 },
+        { x: 530, y: 410, width: 90, height: 20 },
+        { x: 620, y: 170, width: 160, height: 260 }
+    ],
+    2: [
+        { x: 150, y: 300, width: 100, height: 50 },
+        { x: 300, y: 350, width: 120, height: 30 },
+        { x: 500, y: 200, width: 150, height: 100 }
+    ],
+    3: [
+        { x: 100, y: 400, width: 80, height: 80 },
+        { x: 250, y: 350, width: 100, height: 50 },
+        { x: 400, y: 300, width: 120, height: 60 },
+        { x: 600, y: 250, width: 140, height: 70 }
+    ]
+};
+
+
+// Attributes of an goal
+var goal = new Image();
+goal.src = "images/goal.png";
+var goalHeight = 50;
+var goalWidth = 50;
+var goalX = 700;
+var goalY = 120;
+
+
+
+
+
+
+// Attributes of an Left Arrow Button
+var leftArrow = new Image();
+leftArrow.src = "images/LeftArrowBatton.png";
+var leftArrowHeight = 100;
+var leftArrowWidth = 100;
+var leftArrowX = 200;
+var leftArrowY = 200;
+
+// Attributes of an Right Arrow Button
+var rightArrow = new Image();
+rightArrow.src = "images/RightArrowButton.png";
+var rightArrowHeight = 100;
+var rightArrowWidth = 100;
+var rightArrowX = 300;
+var rightArrowY = 300;
+
+// Attributes of an Up Arrow Button
+var upArrow = new Image();
+upArrow.src = "images/UpArrowButton.png";
+var upArrowHeight = 100;
+var upArrowWidth = 100;
+var upArrowX = 400;
+var upArrowY = 400;
+
+// Attributes of an Reload Arrow Button
+var reloadArrow = new Image();
+reloadArrow.src = "images/ReloadButton.png";
+var reloadArrowHeight = 100;
+var reloadArrowWidth = 100;
+var reloadArrowX = 500;
+var reloadArrowY = 500;
+
+
+
+
+
+
+
+// game static variables
+var gameLevel = 1; // Game level (0: Main Menu, 1: Level 1, 2: Level 2, 3: Level 3)
+var gameTimer = 0; // Game time in seconds
 
 
 
@@ -31,15 +121,46 @@ function drawScreen()
 {
     
     ctx.clearRect(0,0,canvas.width,canvas.height);  
-
-    drawBackground();
-    drawUI();
+    
 
     // call to draw the background
-    // ctx.drawImage(background,backgroundX,backgroundY,backgroundWidth,backgroundHeight);
-    // Call to draw the actor
-    ctx.drawImage(actor,actorX,actorY,actorWidth,actorHeight);
+    ctx.drawImage(background,backgroundX,backgroundY,backgroundWidth,backgroundHeight);
 
+    if (gameLevel == 0){
+        background.src = "images/MainMenu.png";
+        
+    }
+    else if (gameLevel == 1){
+        background.src = "images/Level1.png"
+        drawLevelOne();
+    }
+    else if (gameLevel == 2){
+        background.src = "images/Level2.png"
+        drawLevelTwo();
+    }
+    else if (gameLevel == 3){
+        background.src = "images/Level3.png"
+        drawLevelThree();
+    }
+    
+
+    if (!gameLevel == 0){
+        // Call to draw the actor
+        ctx.drawImage(actor,actorX,actorY,actorWidth,actorHeight);
+        // Call to draw the goal
+        ctx.drawImage(goal,goalX,goalY,goalWidth,goalHeight);
+
+
+    }
+    
+
+    
+    // ctx.drawImage(leftArrow, leftArrowX, leftArrowY, leftArrowWidth, leftArrowHeight);    
+    // ctx.drawImage(rightArrow,rightArrowX,rightArrowY,rightArrowWidth,rightArrowHeight);
+    // ctx.drawImage(upArrow,upArrowX,upArrowY,upArrowWidth,upArrowHeight);
+    // ctx.drawImage(reloadArrow,reloadArrowX,reloadArrowY,reloadArrowWidth,reloadArrowHeight);
+
+   
 }
 
 
@@ -52,38 +173,143 @@ function handleLogic(){
 
     // Horizontal movement with inner bounds check
     if (ArrowLeft) {
-        if (actorX > 10) {
+        if (actorX > 20) {
             actorX -= actorSpeed;
         }
     }
     if (ArrowRight) {
-        if (actorX + actorWidth < canvas.width - 10) {
+        if (actorX + actorWidth < canvas.width - 20) {
             actorX += actorSpeed;
         }
     }
+    // // Vertical movement with inner bounds check
+    // if (ArrowUp) {
+    //     if (actorY > 20) { // Prevent moving above the canvas
+    //         actorY -= actorSpeed;
+    //     }
+    // }
+    // if (ArrowDown) {
+    //     if (actorY + actorHeight < canvas.height - 20) { // Prevent moving below the canvas
+    //         actorY += actorSpeed;
+    //     }
+    // }
+    
 
-    // Vertical movement with inner bounds check
-    if (ArrowUp) {
+
+
+
+
+    //jump and gravity logic
+    if (ArrowUp && !isJumping) {
+        isJumping = true;
+        velocityY = jumpStrength;
     }
-    if (ArrowDown) {  
+    if (isJumping) {
+        actorY += velocityY;
+        velocityY += gravity;
+
+        // Check if the actor is on the ground
+        if (actorY + actorHeight >= canvas.height - 180) {
+            actorY = canvas.height - 180 - actorHeight;
+            isJumping = false;
+            velocityY = 0;
+        }
     }
 
- 
 
-    // Check for level change
+
+
+  
+    if (gameLevel == 0)
+    {
+        drawMainUI();
+    }
     if (gameLevel == 1)
     {   
         drawLevelOne();
+        goalX = 700;
+        goalY = 120;
+        
+        // Check if the actor is inside the goal
+        checkActorInsideGoal();
+
     }
-    else if (gameLevel == 2)
+    if (gameLevel == 2)
     {
         drawLevelTwo();
+        goalX = 100;
+        goalY = 110;
+       
+
+        // Check if the actor is inside the goal
+        checkActorInsideGoal();
+        
     }
-    else if (gameLevel == 3)
+    if (gameLevel == 3)
     {
         drawLevelThree();
+        goalX = 100;
+        goalY = 240;
+        
+        // Check if the actor is inside the goal
+        checkActorInsideGoal();
+
     }
-}
+    
+
+
+
+
+
+
+
+
+
+
+    function checkActorInsideGoal() {
+        // Calculate the actor's center point
+        var actorCenterX = actorX + actorWidth / 2;
+        var actorCenterY = actorY + actorHeight / 2;
+
+        // Check if the actor's center is inside the goal boundaries
+        if (
+            actorCenterX > goalX && actorCenterX < goalX + goalWidth &&
+            actorCenterY > goalY && actorCenterY < goalY + goalHeight
+        ) {
+            alert("You reached the goal!");
+            gameLevel += 1;
+
+            // Reset to main menu if levels are completed
+            if (gameLevel >= 4) {
+                gameLevel = 0;
+            }
+
+            // Spawn actor for the next level
+            spawnActor(gameLevel);
+
+            // Reset movement keys
+            ArrowLeft = false;
+            ArrowRight = false;
+            ArrowDown = false;
+            ArrowUp = false;
+        }
+    }
+
+    function spawnActor(level) {
+        if (spawnPoints[level]) {
+            actorX = spawnPoints[level].x;
+            actorY = spawnPoints[level].y;
+        }
+    }
+
+
+
+    
+
+} // end of handleLogic
+
+
+
 
 
 
@@ -98,6 +324,7 @@ var ArrowLeft = false;
 var ArrowRight = false;
 var ArrowUp = false;
 var ArrowDown = false;
+var PressSpase = false;
 
 function handleKeyUp(e)
 {
@@ -119,7 +346,22 @@ function handleKeyUp(e)
     {
         ArrowDown = false;
     }
+    if (code == 32) { // Space key
+        if (gameLevel == 0) {
+            gameLevel = 1;
+            spawnActor(gameLevel); // Spawn actor for level 1
+        }
+    }
+    else if (code == 27) { // Escape key
+        if (gameLevel != 0) {
+            gameLevel = 0;
+            spawnActor(gameLevel); // Reset actor position for main menu if needed
+        }
+    }
 }
+
+
+
 
 function handleKeyDown(e)
 {
@@ -141,6 +383,7 @@ function handleKeyDown(e)
     {
         ArrowDown = true;
     }
+    
 }
 
 
