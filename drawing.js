@@ -94,11 +94,6 @@ function drawLevelTwo()
     ctx.fillText("Timer : " +gameTimer,canvas.width/2,25);
     ctx.fillText("Level : 02",canvas.width-100,25);
     
-    ctx.fillText("Move   :   Left / Right Arrows",25,canvas.height-120);
-    ctx.fillText("Action  :  Up Arrow",25,canvas.height-90);
-    ctx.fillText("Reset  :   Press (R) Key ",25,canvas.height-60);
-    ctx.fillText("Exit  :   Press (Esc) Key ",25,canvas.height-30);
-
 
 
 }
@@ -120,12 +115,7 @@ function drawLevelThree()
     ctx.fillText("Timer : " +gameTimer,canvas.width/2,25);
     ctx.fillText("Level : 03",canvas.width-100,25);
     
-    ctx.fillText("Move   :   Left / Right Arrows",25,canvas.height-120);
-    ctx.fillText("Action  :  Up Arrow",25,canvas.height-90);
-    ctx.fillText("Reset  :   Press (R) Key ",25,canvas.height-60);
-    ctx.fillText("Exit  :   Press (Esc) Key ",25,canvas.height-30);
-    
-
+  
 
 }
 

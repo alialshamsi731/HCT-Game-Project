@@ -84,7 +84,7 @@ var ui = new Image();
 
 
 // game static variables
-var gameLevel = 1; // Game level (0: Main Menu, 1: Level 1, 2: Level 2, 3: Level 3)
+var gameLevel = 0; // Game level (0: Main Menu, 1: Level 1, 2: Level 2, 3: Level 3)
 var gameTimer = 0; // Game time in seconds
 
 
