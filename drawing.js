@@ -1,45 +1,3 @@
-// Attributes of an Left Arrow Button
-var leftArrow = new Image();
-leftArrow.src = "images/LeftArrowButton.png";
-var leftArrowHeight = 100;
-var leftArrowWidth = 100;
-var leftArrowX = 200;
-var leftArrowY = 200;
-
-// Attributes of an Right Arrow Button
-var rightArrow = new Image();
-rightArrow.src = "images/RightArrowButton.png";
-var rightArrowHeight = 100;
-var rightArrowWidth = 100;
-var rightArrowX = 300;
-var rightArrowY = 300;
-
-// Attributes of an Up Arrow Button
-var upArrow = new Image();
-upArrow.src = "images/UpArrowButton.png";
-var upArrowHeight = 100;
-var upArrowWidth = 100;
-var upArrowX = 400;
-var upArrowY = 400;
-
-// Attributes of an Reload Arrow Button
-var reloadArrow = new Image();
-reloadArrow.src = "images/ReloadButton.png";
-var reloadArrowHeight = 100;
-var reloadArrowWidth = 100;
-var reloadArrowX = 500;
-var reloadArrowY = 500;
-
-
-
-
-function drawBackground() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-}
-
-
 // Function to draw the UI
 function drawMainUI(){
 
@@ -216,7 +174,21 @@ function checkLevelLineInteractions() {
                 actorX < Math.max(line.x1, line.x2)
             ) {
                 if (line.danger) {
-                    alert("You failed! Touched danger zone.");
+                    // alert("You failed! Touched danger zone.");
+                    // Decrease life count by 1
+                    lifeCount -= 1;
+                    // Check if life count is zero
+                    if (lifeCount <= 0) {
+                        alert("Game Over!");
+                        gameLevel = 0; // Reset to main menu
+                        lifeCount = 3; // Reset life count
+                        spawnActor(gameLevel); // Reset actor position for main menu
+                    } 
+                    else if(lifeCount == 0) {
+                        // Respawn actor at the current level
+                        alert(`You were hit! Lives remaining: ${lifeCount}`);
+                        spawnActor(gameLevel);
+                    }
                     resetGame();
                     return;
                 } else {
@@ -263,4 +235,5 @@ function checkLevelLineInteractions() {
     if (!onGround && actorY + actorHeight < canvas.height - 180) {
         isJumping = true;
     }
+    
 }

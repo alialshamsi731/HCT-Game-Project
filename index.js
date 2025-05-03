@@ -37,6 +37,16 @@ var spawnPoints = {
 };
 
 
+// Attributes of an second Actor 
+var secondActor = new Image();
+secondActor.src = "images/SecondActor.png";
+var secondActorHeight = 60;
+var secondActorWidth = 60;
+var secondActorX = 100;
+var secondActorY = 120;
+var secondActorMoveRight = false;
+var secondActorSpeed = 5;
+
 
 
 
@@ -73,20 +83,40 @@ var upcontrolWidth = 100;
 var upcontrolX = 570;
 var upcontrolY = 470;
 
+
+
 var ui = new Image();
-    ui.src = "images/ui.png";
-    var uiX = 20;
-    var uiY = 460;
-    var uiWidth = 240;
-    var uiHeight = 120;
+ui.src = "images/ui.png";
+var uiX = 20;
+var uiY = 460;
+var uiWidth = 240;
+var uiHeight = 120;
 
 
+// Attributes of a Life
+var life = new Image();
+life.src = "images/HeartIcon.png";
+var lifeHeight = 25;
+var lifeWidth = 25;
+var lifeX = 10;
+var lifeY = 10;
 
+
+// Attributes of a jump action
+var jump = new Image();
+jump.src = "images/JumpActionIcon.png";
+var jumpHeight = 25;
+var jumpWidth = 25;
+var jumpX = 10;
+var jumpY = 10;
 
 // game static variables
-var gameLevel = 0; // Game level (0: Main Menu, 1: Level 1, 2: Level 2, 3: Level 3)
+var gameLevel = 1; // Game level (0: Main Menu, 1: Level 1, 2: Level 2, 3: Level 3)
 var gameTimer = 0; // Game time in seconds
+var lifeCount = 3; // Number of lives
 
+
+ 
 
 
 // Function to draw screen
@@ -107,6 +137,14 @@ function drawScreen()
     if (!gameLevel == 0){
         // Call to draw the actor
         ctx.drawImage(actor,actorX,actorY,actorWidth,actorHeight);
+        if (gameLevel == 1) {
+            ctx.drawImage(secondActor,secondActorX,secondActorY,secondActorWidth,secondActorHeight);
+        }
+        if (gameLevel == 2) {
+            
+        }
+        // Call to draw the second actor
+        
         // Call to draw the goal
         ctx.drawImage(goal,goalX,goalY,goalWidth,goalHeight);
 
@@ -115,7 +153,25 @@ function drawScreen()
         ctx.drawImage(rightcontrol,rightcontrolX,rightcontrolY,rightcontrolWidth,rightcontrolHeight);
         ctx.drawImage(upcontrol,upcontrolX,upcontrolY,upcontrolWidth,upcontrolHeight);
         ctx.drawImage(ui,uiX,uiY,uiWidth,uiHeight);
+        if (lifeCount >= 1) {
+            ctx.drawImage(life, 25, 55, lifeWidth, lifeHeight);
+        }
+        if (lifeCount >= 2) {
+            ctx.drawImage(life, 55, 55, lifeWidth, lifeHeight);
+        }
+        if (lifeCount >= 3) {
+            ctx.drawImage(life, 85, 55, lifeWidth, lifeHeight);
+        }
+        
+        if (gameLevel == 1) {
+            ctx.drawImage(jump, 30, 10, jumpWidth, jumpHeight);
+            ctx.drawImage(jump, 55, 10, jumpWidth, jumpHeight);
+            ctx.drawImage(jump, 80, 10, jumpWidth, jumpHeight);
+        }
+
     }
+
+
 }
 
 
@@ -137,28 +193,34 @@ function handleLogic(){
             actorX += actorSpeed;
         }
     }
-    // // Vertical movement with inner bounds check
-    // if (ArrowUp) {
-    //     if (actorY > 20) { // Prevent moving above the canvas
-    //         actorY -= actorSpeed;
-    //     }
-    // }
-    // if (ArrowDown) {
-    //     if (actorY + actorHeight < canvas.height - 20) { // Prevent moving below the canvas
-    //         actorY += actorSpeed;
-    //     }
-    // }
+
+    
     
 
 
 
 
 
-    //jump and gravity logic
-    if (ArrowUp && !isJumping) {
-        isJumping = true;
-        velocityY = jumpStrength;
-    }
+    // //jump and gravity logic
+    // if (ArrowUp && !isJumping) {
+    //     isJumping = true;
+    //     velocityY = jumpStrength;
+    // }
+    // if (isJumping) {
+    //     actorY += velocityY;
+    //     velocityY += gravity;
+
+    //     // Check if the actor is on the ground
+    //     if (actorY + actorHeight >= canvas.height - 180) {
+    //         actorY = canvas.height - 180 - actorHeight;
+    //         isJumping = false;
+    //         velocityY = 0;
+    //     }
+    // }
+    
+
+
+    // Gravity and jump logic
     if (isJumping) {
         actorY += velocityY;
         velocityY += gravity;
@@ -170,9 +232,47 @@ function handleLogic(){
             velocityY = 0;
         }
     }
+    // Jumping logic
+    if (ArrowUp && !isJumping) {
+        isJumping = true;
+        velocityY = jumpStrength;
+    }
+    // Check if the actor is on the ground
+    if (actorY + actorHeight >= canvas.height - 180) {
+        actorY = canvas.height - 180 - actorHeight;
+        isJumping = false;
+        velocityY = 0;
+    }
+    // Check if the actor is on the ground
+    if (actorY + actorHeight >= canvas.height - 180) {
+        actorY = canvas.height - 180 - actorHeight;
+        isJumping = false;
+        velocityY = 0;
+    }
+    // Check if the actor is on the ground
+    if (actorY + actorHeight >= canvas.height - 180) {
+        actorY = canvas.height - 180 - actorHeight;
+        isJumping = false;
+        velocityY = 0;
+    }
+    // Check if the actor is on the ground
+    if (actorY + actorHeight >= canvas.height - 180) {
+        actorY = canvas.height - 180 - actorHeight;
+        isJumping = false;
+        velocityY = 0;
+    }
+    // Check if the actor is on the ground
     
+
+
+
+
+
+
+
+
     // Check line collisions and failure
-checkLevelLineInteractions();
+    checkLevelLineInteractions();
 
 
 
@@ -186,7 +286,13 @@ checkLevelLineInteractions();
         drawLevelOne();
         goalX = 700;
         goalY = 120;
+       
         
+        moveSecondActor();
+
+        // Check if the actor is hit the second actor
+        actorHitSecondActor();
+
         // Check if the actor is inside the goal
         checkActorInsideGoal();
 
@@ -199,6 +305,9 @@ checkLevelLineInteractions();
         goalX = 100;
         goalY = 110;
        
+
+        // Check if the actor is hit the second actor
+        actorHitSecondActor();
 
         // Check if the actor is inside the goal
         checkActorInsideGoal();
@@ -245,6 +354,7 @@ checkLevelLineInteractions();
 
             // Spawn actor for the next level
             spawnActor(gameLevel);
+            
 
             // Reset movement keys
             ArrowLeft = false;
@@ -254,12 +364,16 @@ checkLevelLineInteractions();
         }
     }
 
+
+
+
     function spawnActor(level) {
         if (spawnPoints[level]) {
             actorX = spawnPoints[level].x;
             actorY = spawnPoints[level].y;
         }
     }
+
 
  
     
@@ -310,6 +424,7 @@ function handleKeyUp(e)
     if (code == 32) { // Space key
         if (gameLevel == 0) {
             resettingtGame(); // Call the reset function
+            
         }
     }
     else if (code == 27) { // Escape key
@@ -374,7 +489,7 @@ function resettingtGame() {
 
     // Reset any game timers or progress
     gameTimer = 0;
-
+    lifeCount = 3; // Reset life count
     // Force background image to update
     background.src = "images/Level1.png";
 
@@ -438,3 +553,111 @@ function animate()
 
 // Start the animate 
 animate();
+
+
+
+
+
+// Add touch event listeners for both touchstart and touchend
+window.addEventListener("touchstart", handleTouchStart, false);
+window.addEventListener("touchend", handleTouchEnd, false);
+
+// Function to handle touch start event
+function handleTouchStart(touchEvent) {
+    // Get canvas rectangle object
+    var canvasRectangle = canvas.getBoundingClientRect();
+
+    // Retrieve the distance between the top and the left corners
+    // of the canvas relative to the browser window
+    var canvasTop = canvasRectangle.top;
+    var canvasLeft = canvasRectangle.left;
+
+    // Get distances from top and left of the  
+    // browser windows where the touch happened
+    var touchX = touchEvent.changedTouches[0].clientX;
+    var touchY = touchEvent.changedTouches[0].clientY;
+
+    // Get touch x and y relative to our reference the canvas
+    var tX = touchX - canvasLeft;
+    var tY = touchY - canvasTop;
+
+    // Check if the touch is inside the left or right control buttons
+    if (ClickLeftArrowButton(tX, tY)) {
+        ArrowLeft = true;
+    }
+    if (ClickRightArrowButton(tX, tY)) {
+        ArrowRight = true;
+    }
+}
+
+// Function to handle touch end event
+function handleTouchEnd() {
+    // Stop movement when the touch ends
+    ArrowLeft = false;
+    ArrowRight = false;
+}
+
+// Function to check if the touch is inside the left arrow button
+function ClickLeftArrowButton(x, y) {
+    var insideX = x >= leftcontrolX && x <= (leftcontrolX + leftcontrolWidth);
+    var insideY = y >= leftcontrolY && y <= (leftcontrolY + leftcontrolHeight);
+    return insideX && insideY;
+}
+
+// Function to check if the touch is inside the right arrow button
+function ClickRightArrowButton(x, y) {
+    var insideX = x >= rightcontrolX && x <= (rightcontrolX + rightcontrolWidth);
+    var insideY = y >= rightcontrolY && y <= (rightcontrolY + rightcontrolHeight);
+    return insideX && insideY;
+}
+
+
+
+function actorHitSecondActor() {
+    // Check if the actor is inside the second actor's boundaries
+    if (
+        actorX < secondActorX + secondActorWidth &&
+        actorX + actorWidth > secondActorX &&
+        actorY < secondActorY + secondActorHeight &&
+        actorY + actorHeight > secondActorY
+    ) {
+        secondActorX = 120; // Reset second actor position
+        secondActorY = 120; // Reset second actor position
+        // Decrease life count by 1
+        lifeCount -= 1;
+
+        
+        // Check if life count is zero
+        if (!lifeCount <= 0) {
+            // Respawn actor at the current level
+            alert(`You were hit! Lives remaining: ${lifeCount}`);
+            spawnActor(gameLevel);
+            
+        } else {
+            alert("Game Over!");
+            gameLevel = 0; // Reset to main menu
+            lifeCount = 3; // Reset life count
+            spawnActor(gameLevel); // Reset actor position for main menu
+        }
+    }
+}
+
+
+
+
+function moveSecondActor() {
+    if (secondActorMoveRight) {
+        secondActorX += secondActorSpeed;
+        if (secondActorX + secondActorWidth >= canvas.width - 170) {
+            secondActorMoveRight = false;
+        }
+    } else {
+        secondActorX -= secondActorSpeed;
+        if (secondActorX <= 170) {
+            secondActorMoveRight = true;
+        }
+    }
+}
+
+
+
