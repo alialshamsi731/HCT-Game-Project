@@ -116,8 +116,6 @@ var gameTimer = 0; // Game time in seconds
 var lifeCount = 3; // Number of lives
 
 
- 
-
 
 // Function to draw screen
 function drawScreen()
@@ -193,34 +191,28 @@ function handleLogic(){
             actorX += actorSpeed;
         }
     }
-
-    
-    
-
-
-
-
-
-    // //jump and gravity logic
-    // if (ArrowUp && !isJumping) {
-    //     isJumping = true;
-    //     velocityY = jumpStrength;
+    // // Vertical movement with inner bounds check
+    // if (ArrowUp) {
+    //     if (actorY > 20) { // Prevent moving above the canvas
+    //         actorY -= actorSpeed;
+    //     }
     // }
-    // if (isJumping) {
-    //     actorY += velocityY;
-    //     velocityY += gravity;
-
-    //     // Check if the actor is on the ground
-    //     if (actorY + actorHeight >= canvas.height - 180) {
-    //         actorY = canvas.height - 180 - actorHeight;
-    //         isJumping = false;
-    //         velocityY = 0;
+    // if (ArrowDown) {
+    //     if (actorY + actorHeight < canvas.height - 20) { // Prevent moving below the canvas
+    //         actorY += actorSpeed;
     //     }
     // }
     
+    
 
 
-    // Gravity and jump logic
+
+
+    //jump and gravity logic
+    if (ArrowUp && !isJumping) {
+        isJumping = true;
+        velocityY = jumpStrength;
+    }
     if (isJumping) {
         actorY += velocityY;
         velocityY += gravity;
@@ -232,45 +224,7 @@ function handleLogic(){
             velocityY = 0;
         }
     }
-    // Jumping logic
-    if (ArrowUp && !isJumping) {
-        isJumping = true;
-        velocityY = jumpStrength;
-    }
-    // Check if the actor is on the ground
-    if (actorY + actorHeight >= canvas.height - 180) {
-        actorY = canvas.height - 180 - actorHeight;
-        isJumping = false;
-        velocityY = 0;
-    }
-    // Check if the actor is on the ground
-    if (actorY + actorHeight >= canvas.height - 180) {
-        actorY = canvas.height - 180 - actorHeight;
-        isJumping = false;
-        velocityY = 0;
-    }
-    // Check if the actor is on the ground
-    if (actorY + actorHeight >= canvas.height - 180) {
-        actorY = canvas.height - 180 - actorHeight;
-        isJumping = false;
-        velocityY = 0;
-    }
-    // Check if the actor is on the ground
-    if (actorY + actorHeight >= canvas.height - 180) {
-        actorY = canvas.height - 180 - actorHeight;
-        isJumping = false;
-        velocityY = 0;
-    }
-    // Check if the actor is on the ground
     
-
-
-
-
-
-
-
-
     // Check line collisions and failure
     checkLevelLineInteractions();
 
@@ -658,6 +612,3 @@ function moveSecondActor() {
         }
     }
 }
-
-
-
