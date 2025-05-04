@@ -48,6 +48,15 @@ var secondActorMoveRight = false;
 var secondActorSpeed = 5;
 
 
+// Attributes of an crab
+var carb = new Image();
+carb.src = "images/Crab.png";
+var carbHeight = 30;
+var carbWidth = 30;
+var carbX = 380;
+var carbY = 110;
+var carbSpeed = 5;
+var carbMoveRight = false;
 
 
 // Attributes of an goal
@@ -83,7 +92,29 @@ var upcontrolWidth = 100;
 var upcontrolX = 570;
 var upcontrolY = 470;
 
+// draw the Up reset Button
+var resetcontrol = new Image();
+resetcontrol.src = "images/ReloadArrowButton.png";
+var resetcontrolHeight = 30;
+var resetcontrolWidth = 30;
+var resetcontrolX = 590;
+var resetcontrolY = 5;
 
+// draw the Up exit Button
+var exitcontrol = new Image();
+exitcontrol.src = "images/HomeButton.png";
+var exitcontrolHeight = 30;
+var exitcontrolWidth = 30;
+var exitcontrolX = 550;
+var exitcontrolY = 5;
+
+// draw the start Button
+var startcontrol = new Image();
+startcontrol.src = "images/StartButton.png";
+var startcontrolHeight = 125;
+var startcontrolWidth = 250;
+var startcontrolX = canvas.width /2 - startcontrolWidth / 2;
+var startcontrolY = 400;
 
 var ui = new Image();
 ui.src = "images/ui.png";
@@ -111,11 +142,13 @@ var jumpX = 10;
 var jumpY = 10;
 
 // game static variables
-var gameLevel = 1; // Game level (0: Main Menu, 1: Level 1, 2: Level 2, 3: Level 3)
+var gameLevel = 0; // Game level (0: Main Menu, 1: Level 1, 2: Level 2, 3: Level 3)
 var gameTimer = 0; // Game time in seconds
 var lifeCount = 3; // Number of lives
 
 
+var jumpCount = 2; // Number of jumps
+var boostCount = 0; // Number of boosts
 
 // Function to draw screen
 function drawScreen()
@@ -139,7 +172,7 @@ function drawScreen()
             ctx.drawImage(secondActor,secondActorX,secondActorY,secondActorWidth,secondActorHeight);
         }
         if (gameLevel == 2) {
-            
+            ctx.drawImage(carb,carbX,carbY,carbWidth,carbHeight);
         }
         // Call to draw the second actor
         
@@ -150,7 +183,11 @@ function drawScreen()
         ctx.drawImage(leftcontrol,leftcontrolX,leftcontrolY,leftcontrolWidth,leftcontrolHeight);
         ctx.drawImage(rightcontrol,rightcontrolX,rightcontrolY,rightcontrolWidth,rightcontrolHeight);
         ctx.drawImage(upcontrol,upcontrolX,upcontrolY,upcontrolWidth,upcontrolHeight);
+        ctx.drawImage(resetcontrol,resetcontrolX,resetcontrolY,resetcontrolWidth,resetcontrolHeight);
+        ctx.drawImage(exitcontrol,exitcontrolX,exitcontrolY,exitcontrolWidth,exitcontrolHeight);
         ctx.drawImage(ui,uiX,uiY,uiWidth,uiHeight);
+
+
         if (lifeCount >= 1) {
             ctx.drawImage(life, 25, 55, lifeWidth, lifeHeight);
         }
@@ -161,12 +198,20 @@ function drawScreen()
             ctx.drawImage(life, 85, 55, lifeWidth, lifeHeight);
         }
         
-        if (gameLevel == 1) {
-            ctx.drawImage(jump, 30, 10, jumpWidth, jumpHeight);
-            ctx.drawImage(jump, 55, 10, jumpWidth, jumpHeight);
-            ctx.drawImage(jump, 80, 10, jumpWidth, jumpHeight);
+        // Call to draw the jump action
+        if (jumpCount >= 1) {
+            ctx.drawImage(jump, jumpX, jumpY, jumpWidth, jumpHeight);
+        }
+        if (jumpCount >= 2) {
+            ctx.drawImage(jump, jumpX + 30, jumpY, jumpWidth, jumpHeight);
+        }
+        if (jumpCount >= 3) {
+            ctx.drawImage(jump, jumpX + 60, jumpY, jumpWidth, jumpHeight);
         }
 
+    }else { 
+        // Draw the start button
+        ctx.drawImage(startcontrol, startcontrolX, startcontrolY, startcontrolWidth, startcontrolHeight);
     }
 
 
@@ -180,6 +225,9 @@ function drawScreen()
 // Function to handle animation logic
 function handleLogic(){
 
+
+
+    
     // Horizontal movement with inner bounds check
     if (ArrowLeft) {
         if (actorX > 20) {
@@ -191,17 +239,6 @@ function handleLogic(){
             actorX += actorSpeed;
         }
     }
-    // // Vertical movement with inner bounds check
-    // if (ArrowUp) {
-    //     if (actorY > 20) { // Prevent moving above the canvas
-    //         actorY -= actorSpeed;
-    //     }
-    // }
-    // if (ArrowDown) {
-    //     if (actorY + actorHeight < canvas.height - 20) { // Prevent moving below the canvas
-    //         actorY += actorSpeed;
-    //     }
-    // }
     
     
 
@@ -241,6 +278,19 @@ function handleLogic(){
         goalX = 700;
         goalY = 120;
        
+        jumpCount = 3; // Reset jump count for level 1
+
+        if (jumpCount > 0) {
+            // Allow jumping
+            if (ArrowUp && !isJumping) {
+                isJumping = true;
+                velocityY = jumpStrength;
+                jumpCount--;
+            }
+        }else {
+            // Prevent jumping if jump count is zero
+            isJumping = false;
+        }
         
         moveSecondActor();
 
@@ -249,9 +299,6 @@ function handleLogic(){
 
         // Check if the actor is inside the goal
         checkActorInsideGoal();
-
-        
-
     }
     if (gameLevel == 2)
     {
@@ -260,12 +307,11 @@ function handleLogic(){
         goalY = 110;
        
 
-        // Check if the actor is hit the second actor
-        actorHitSecondActor();
+        
 
         // Check if the actor is inside the goal
         checkActorInsideGoal();
-        
+
     }
     if (gameLevel == 3)
     {
@@ -275,148 +321,60 @@ function handleLogic(){
         
         // Check if the actor is inside the goal
         checkActorInsideGoal();
-
     }
     
 
-
-
-
-
-
-
-
-
-
-    function checkActorInsideGoal() {
-        // Calculate the actor's center point
-        var actorCenterX = actorX + actorWidth / 2;
-        var actorCenterY = actorY + actorHeight / 2;
-
-        // Check if the actor's center is inside the goal boundaries
-        if (
-            actorCenterX > goalX && actorCenterX < goalX + goalWidth &&
-            actorCenterY > goalY && actorCenterY < goalY + goalHeight
-        ) {
-            alert("You reached the goal!");
-            gameLevel += 1;
-
-            // Reset to main menu if levels are completed
-            if (gameLevel >= 4) {
-                gameLevel = 0;
-            }
-
-            // Spawn actor for the next level
-            spawnActor(gameLevel);
-            
-
-            // Reset movement keys
-            ArrowLeft = false;
-            ArrowRight = false;
-            ArrowDown = false;
-            ArrowUp = false;
-        }
-    }
-
-
-
-
-    function spawnActor(level) {
-        if (spawnPoints[level]) {
-            actorX = spawnPoints[level].x;
-            actorY = spawnPoints[level].y;
-        }
-    }
-
-
- 
-    
-
-
-
-    
 } // end of handleLogic
 
 
 
 
 
+function checkActorInsideGoal() {
+    // Calculate the actor's center point
+    var actorCenterX = actorX + actorWidth / 2;
+    var actorCenterY = actorY + actorHeight / 2;
 
+    // Check if the actor's center is inside the goal boundaries
+    if (
+        actorCenterX > goalX && actorCenterX < goalX + goalWidth &&
+        actorCenterY > goalY && actorCenterY < goalY + goalHeight
+    ) {
+        alert("You reached the goal!");
+        gameLevel += 1;
 
+        // Reset to main menu if levels are completed
+        if (gameLevel >= 4) {
+            gameLevel = 0;
+        }
 
-// Add an event handler for key presses
-window.addEventListener("keydown",handleKeyDown);
-// Add an event handler for key releases
-window.addEventListener("keyup",handleKeyUp);
+        // Spawn actor for the next level
+        spawnActor(gameLevel);
+        
 
-var ArrowLeft = false;
-var ArrowRight = false;
-var ArrowUp = false;
-var ArrowDown = false;
-var PressSpase = false;
-
-function handleKeyUp(e)
-{
-    var code = e.keyCode;
-
-    if(code == 37)
-    {
+        // Reset movement keys
         ArrowLeft = false;
-    }
-    else if (code == 39)
-    {
         ArrowRight = false;
-    }
-    else if (code == 38)
-    {
+        ArrowDown = false;
         ArrowUp = false;
     }
-    else if (code == 40)
-    {
-        ArrowDown = false;
-    }
-    if (code == 32) { // Space key
-        if (gameLevel == 0) {
-            resettingtGame(); // Call the reset function
-            
-        }
-    }
-    else if (code == 27) { // Escape key
-        if (gameLevel != 0) {
-            gameLevel = 0;
-            spawnActor(gameLevel); // Reset actor position for main menu if needed
-        }
-    }
-    else if (code == 82) { // R key
-        resetGame(); // Call the reset function
-    }
 }
 
 
 
 
-function handleKeyDown(e)
-{
-    var code = e.keyCode;
 
-    if(code == 37)
-    {
-        ArrowLeft = true;
+
+function spawnActor(level) {
+        // Ensure the spawn points are defined for the level
+        if (spawnPoints[level]) {
+            actorX = spawnPoints[level].x; // Reset actor's X position
+            actorY = spawnPoints[level].y; // Reset actor's Y position
+            velocityY = 0; // Reset vertical velocity
+            isJumping = false; // Reset jumping state
+        }
     }
-    else if (code == 39)
-    {
-        ArrowRight = true;
-    }
-    else if (code == 38)
-    {
-        ArrowUp = true;
-    }
-    else if (code == 40)
-    {
-        ArrowDown = true;
-    }
-    
-}
+
 
 
 
@@ -471,12 +429,67 @@ function resetGame() {
 
     // Reset timer or level-specific state
     gameTimer = 0;
-
+    lifeCount--;
+    if (lifeCount <= 0) {
+        alert("Game Over!");
+        gameLevel = 0; // Reset to main menu
+        lifeCount = 3; // Reset life count
+    }
     // Refresh background if needed
     background.src = `images/Level${gameLevel}.png`;
 
     console.log("Level reset complete.");
 }
+
+
+
+function actorHitSecondActor() {
+    // Check if the actor is inside the second actor's boundaries
+    if (
+        actorX < secondActorX + secondActorWidth &&
+        actorX + actorWidth > secondActorX &&
+        actorY < secondActorY + secondActorHeight &&
+        actorY + actorHeight > secondActorY
+    ) {
+        secondActorX = 120; // Reset second actor position
+        secondActorY = 120; // Reset second actor position
+        // Decrease life count by 1
+        lifeCount -= 1;
+
+        
+        // Check if life count is greater than zero
+        if (lifeCount > 0) {
+            // Respawn actor at the current level
+            alert(`You were hit! Lives remaining: ${lifeCount}`);
+            spawnActor(gameLevel);
+        } else {
+            // Game over logic
+            alert("Game Over!");
+            gameLevel = 0; // Reset to main menu
+            lifeCount = 3; // Reset life count
+            spawnActor(gameLevel); // Reset actor position for main menu
+        }
+    }
+}
+
+
+
+
+function moveSecondActor() {
+    if (secondActorMoveRight) {
+        secondActorX += secondActorSpeed;
+        if (secondActorX + secondActorWidth >= canvas.width - 170) {
+            secondActorMoveRight = false;
+        }
+    } else {
+        secondActorX -= secondActorSpeed;
+        if (secondActorX <= 170) {
+            secondActorMoveRight = true;
+        }
+    }
+}
+
+
 
 
 
@@ -507,6 +520,82 @@ function animate()
 
 // Start the animate 
 animate();
+
+
+
+
+// Add an event handler for key presses
+window.addEventListener("keydown",handleKeyDown);
+// Add an event handler for key releases
+window.addEventListener("keyup",handleKeyUp);
+
+var ArrowLeft = false;
+var ArrowRight = false;
+var ArrowUp = false;
+var ArrowDown = false;
+var PressSpase = false;
+
+function handleKeyUp(e)
+{
+    var code = e.keyCode;
+
+    if(code == 37)
+    {
+        ArrowLeft = false;
+    }
+    else if (code == 39)
+    {
+        ArrowRight = false;
+    }
+    else if (code == 38)
+    {
+        ArrowUp = false;
+    }
+    else if (code == 40)
+    {
+        ArrowDown = false;
+    }
+    if (code == 32) { // Space key
+        if (gameLevel == 0) {
+            resettingtGame(); // Call the reset function
+            
+        }
+    }
+    else if (code == 27) { // Escape key
+        if (gameLevel != 0) {
+            gameLevel = 0;
+            spawnActor(gameLevel); // Reset actor position for main menu if needed
+        }
+    }
+    else if (code == 82) { // R key
+        resetGame(); // Call the reset function
+    }
+}
+
+function handleKeyDown(e)
+{
+    var code = e.keyCode;
+
+    if(code == 37)
+    {
+        ArrowLeft = true;
+    }
+    else if (code == 39)
+    {
+        ArrowRight = true;
+    }
+    else if (code == 38)
+    {
+        ArrowUp = true;
+    }
+    else if (code == 40)
+    {
+        ArrowDown = true;
+    }
+    
+}
+
+
 
 
 
@@ -542,6 +631,20 @@ function handleTouchStart(touchEvent) {
     if (ClickRightArrowButton(tX, tY)) {
         ArrowRight = true;
     }
+    if (ClickQuestionMarkButton(tX, tY)) {
+        ArrowUp = true;
+    }
+    if (ClickReloadArrowButton(tX, tY)) {
+        resetGame();
+        
+    }
+    if (ClickHomeButton(tX, tY)) {
+        gameLevel = 0;
+        spawnActor(gameLevel); // Reset actor position for main menu if needed
+    }
+    if (ClickStartButton(tX, tY)) {
+        resettingtGame(); // Call the reset function
+    }
 }
 
 // Function to handle touch end event
@@ -549,6 +652,7 @@ function handleTouchEnd() {
     // Stop movement when the touch ends
     ArrowLeft = false;
     ArrowRight = false;
+    ArrowUp = false;
 }
 
 // Function to check if the touch is inside the left arrow button
@@ -565,50 +669,25 @@ function ClickRightArrowButton(x, y) {
     return insideX && insideY;
 }
 
-
-
-function actorHitSecondActor() {
-    // Check if the actor is inside the second actor's boundaries
-    if (
-        actorX < secondActorX + secondActorWidth &&
-        actorX + actorWidth > secondActorX &&
-        actorY < secondActorY + secondActorHeight &&
-        actorY + actorHeight > secondActorY
-    ) {
-        secondActorX = 120; // Reset second actor position
-        secondActorY = 120; // Reset second actor position
-        // Decrease life count by 1
-        lifeCount -= 1;
-
-        
-        // Check if life count is zero
-        if (!lifeCount <= 0) {
-            // Respawn actor at the current level
-            alert(`You were hit! Lives remaining: ${lifeCount}`);
-            spawnActor(gameLevel);
-            
-        } else {
-            alert("Game Over!");
-            gameLevel = 0; // Reset to main menu
-            lifeCount = 3; // Reset life count
-            spawnActor(gameLevel); // Reset actor position for main menu
-        }
-    }
+function ClickQuestionMarkButton(x, y) {
+    var insideX = x >= upcontrolX && x <= (upcontrolX + upcontrolWidth);
+    var insideY = y >= upcontrolY && y <= (upcontrolY + upcontrolHeight);
+    return insideX && insideY;
 }
 
+function ClickReloadArrowButton(x, y) {
+    var insideX = x >= resetcontrolX && x <= (resetcontrolX + resetcontrolWidth);
+    var insideY = y >= resetcontrolY && y <= (resetcontrolY + resetcontrolHeight);
+    return insideX && insideY;
+}
+function ClickHomeButton(x, y) {
+    var insideX = x >= exitcontrolX && x <= (exitcontrolX + exitcontrolWidth);
+    var insideY = y >= exitcontrolY && y <= (exitcontrolY + exitcontrolHeight);
+    return insideX && insideY;
+}
 
-
-
-function moveSecondActor() {
-    if (secondActorMoveRight) {
-        secondActorX += secondActorSpeed;
-        if (secondActorX + secondActorWidth >= canvas.width - 170) {
-            secondActorMoveRight = false;
-        }
-    } else {
-        secondActorX -= secondActorSpeed;
-        if (secondActorX <= 170) {
-            secondActorMoveRight = true;
-        }
-    }
+function ClickStartButton(x, y) {
+    var insideX = x >= startcontrolX && x <= (startcontrolX + startcontrolWidth);
+    var insideY = y >= startcontrolY && y <= (startcontrolY + startcontrolHeight);
+    return insideX && insideY;
 }

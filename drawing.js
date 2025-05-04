@@ -6,7 +6,7 @@ function drawMainUI(){
     ctx.beginPath();
     ctx.font = "24pt Trattatello";
     ctx.fillStyle = "Black";
-    ctx.fillText("Press (Enter) to Start",canvas.width/2-125,canvas.height-150);
+    ctx.fillText("Press (Space) to Start",canvas.width/2-110,canvas.height-40);
     
 }
 
